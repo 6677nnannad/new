@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WenYan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Caveat:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Dancing Script', cursive;
+            overflow-x: hidden;
+            background: #000;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 1s ease-out;
+        }
+
+        .loading-heart {
+            font-size: 80px;
+            color: #fff;
+            animation: heartbeat 1.5s infinite;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Background */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://s21.ax1x.com/2025/08/26/pVyoUud.jpg') center/cover no-repeat;
+            z-index: -2;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* Heart particles */
+        .heart-particle {
+            position: fixed;
+            color: rgba(255, 182, 193, 0.6);
+            font-size: 20px;
+            pointer-events: none;
+            z-index: 1;
+            animation: float 8s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .time-display {
+            color: #fff;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+        }
+
+        .heart-icon {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            color: #ff6b6b;
+            text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+
+        .treasure-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .treasure-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        /* Profile Image */
+        .profile-image {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .music-player:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .music-icon {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .music-waves {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(74, 144, 226, 0.6);
+            animation: wave 2s infinite;
+        }
+
+        .music-waves:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .music-waves:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        @keyframes wave {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Album Container */
+        .album-container {
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        .photo-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 50px 20px;
+        }
+
+        .photo-wrapper {
+            position: relative;
+            max-width: 90%;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .photo-item {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .quote-text {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            font-weight: 500;
+            z-index: 10;
+        }
+
+        .quote-main {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .quote-translation {
+            font-size: 14px;
+            opacity: 0.8;
+            font-family: 'Noto Sans', sans-serif;
+        }
+
+        /* Floating quotes */
+        .floating-quote {
+            position: fixed;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0;
+            animation: fadeInOut 4s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; transform: translateY(20px); }
+            20%, 80% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+            width: 400px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .modal button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .modal button:hover {
+            background: #ee5a24;
+            transform: translateY(-2px);
+        }
+
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10002;
+        }
+
+        .video-container {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .photo-section {
+                padding: 30px 15px;
+            }
+            
+            .quote-main {
+                font-size: 20px;
+            }
+            
+            .quote-translation {
+                font-size: 12px;
+            }
+            
+            .time-display {
+                font-size: 14px;
+            }
+            
+            .profile-image {
+                width: 60px;
+                height: 60px;
+                top: 70px;
+            }
+            
+            .floating-quote {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💖</div>
+    </div>
+
+    <!-- Background -->
+    <div class="bg-container"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="time-display" id="timeDisplay"></div>
+        <div class="heart-icon">❤️</div>
+        <button class="treasure-btn" onclick="openTreasureModal()">宝藏</button>
+    </div>
+
+    <!-- Profile Image -->
+    <img src="https://pic.itxiaohui.top/20250827/b00b951e795e57ff62378a1f13310d77.png" alt="Profile" class="profile-image">
+
+    <!-- Music Player -->
+    <div class="music-player" id="musicPlayer" onclick="toggleMusic()">
+        <div class="music-waves" id="wave1"></div>
+        <div class="music-waves" id="wave2"></div>
+        <div class="music-waves" id="wave3"></div>
+        <div class="music-icon">🎵</div>
+    </div>
+
+    <!-- Album Container -->
+    <div class="album-container">
+        <!-- Photo sections will be generated by JavaScript -->
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal" id="treasureModal">
+        <div class="modal-content">
+            <h3>答对密码有惊喜 💎</h3>
+            <input type="password" id="passwordInput" placeholder="请输入密码">
+            <br>
+            <button onclick="checkPassword()">确定</button>
+            <button onclick="closeTreasureModal()">取消</button>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <button class="close-btn" onclick="closeVideoModal()">×</button>
+        <div class="video-container">
+            <video id="treasureVideo" controls>
+                <source src="https://raw.githubusercontent.com/6677nnannad/my-wenb-music/refs/heads/main/%E4%BD%A0%E8%A2%AB%E9%AA%97%E4%BA%86%20%E5%8E%9F%E7%89%88%E9%AB%98%E6%B8%85%E6%97%A0%E6%B0%B4%E5%8D%B0.mp4" type="video/mp4">
+                您的浏览器不支持视频播放。
+            </video>
+        </div>
+    </div>
+
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="https://raw.githubusercontent.com/6677nnannad/my-wenb-music/refs/heads/main/haru%20haru.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Image URLs
+        const images = [
+            'https://s21.ax1x.com/2025/08/26/pVyoG9O.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoT8U.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyo72F.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoHv4.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoqKJ.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoLr9.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoObR.jpg',
+            'https://pic.itxiaohui.top/20250826/7d87ea90f93391070a74c60562e37d24.jpg',
+            'https://pic.itxiaohui.top/20250826/75ab2fbb9b0c32d304a2048d755313f0.jpg',
+            'https://pic.itxiaohui.top/20250826/1ac4f123d972adbc6397892176d7f955.jpg',
+            'https://pic.itxiaohui.top/20250826/cd61b4b4712ef9afb3ae71965b3e7cb0.jpg',
+            'https://pic.itxiaohui.top/20250826/b5cee1a7f10b1503dc5b7ec7c158fa2c.jpg',
+            'https://pic.itxiaohui.top/20250826/b8940c81fe3d6b2500926609e98d4a70.jpg',
+            'https://pic.itxiaohui.top/20250826/b049ffdfe00f7cf4c5db9bc5e260a194.jpg',
+            'https://pic.itxiaohui.top/20250826/bd37208fdad5f3e800eed2017e767a78.jpg',
+            'https://pic.itxiaohui.top/20250826/dd289be3bff468a132d153e4732f8a06.jpg'
+        ];
+
+        // Quotes for images
+        const imageQuotes = [
+            { main: "Silent moments speak the loudest", translation: "寂静的时刻最能诉说心声", lang: "en" },
+            { main: "마음속 깊은 곳의 외로움", translation: "心灵深处的孤独", lang: "ko" },
+            { main: "心の奥底に隠された涙", translation: "隐藏在内心深处的眼泪", lang: "ja" },
+            { main: "Melancholy whispers in the wind", translation: "忧郁在风中低语", lang: "en" },
+            { main: "그리움이 밤을 수놓는다", translation: "思念装点着夜晚", lang: "ko" },
+            { main: "儚い夢が心を包む", translation: "虚幻的梦境包围着心灵", lang: "ja" },
+            { main: "Solitude paints beautiful sorrows", translation: "孤独描绘着美丽的忧伤", lang: "en" },
+            { main: "슬픔 속에서 피어나는 아름다움", translation: "在悲伤中绽放的美丽", lang: "ko" },
+            { main: "静寂の中に響く心の声", translation: "寂静中回响的内心声音", lang: "ja" },
+            { main: "Tears that shine like diamonds", translation: "如钻石般闪耀的泪珠", lang: "en" },
+            { main: "달빛 아래 흘러가는 시간", translation: "月光下流逝的时光", lang: "ko" },
+            { main: "記憶の片隅に残る温もり", translation: "记忆角落里残留的温暖", lang: "ja" },
+            { main: "Whispered secrets of the heart", translation: "心中轻声诉说的秘密", lang: "en" },
+            { main: "아픈 마음을 달래는 밤", translation: "安慰痛苦心灵的夜晚", lang: "ko" },
+            { main: "優しい嘘で包まれた真実", translation: "被温柔谎言包裹的真相", lang: "ja" },
+            { main: "Beauty found in broken things", translation: "在破碎中发现的美丽", lang: "en" }
+        ];
+
+        // Floating quotes
+        const floatingQuotes = [
+            { main: "Love is not about possession", translation: "爱不是占有", lang: "en" },
+            { main: "사랑은 기다림이다", translation: "爱是等待", lang: "ko" },
+            { main: "君への想いは星のように", translation: "对你的思念如星辰般", lang: "ja" },
+            { main: "Distance means nothing to hearts", translation: "距离对心灵而言毫无意义", lang: "en" },
+            { main: "추억은 가슴 속에 영원히", translation: "回忆永远在心中", lang: "ko" },
+            { main: "時間は傷を癒してくれる", translation: "时间会治愈伤痛", lang: "ja" },
+            { main: "Sometimes silence speaks volumes", translation: "有时沉默胜过千言万语", lang: "en" },
+            { main: "눈물은 마음의 언어", translation: "眼泪是心灵的语言", lang: "ko" },
+            { main: "夜空に願いを込めて", translation: "向夜空许下心愿", lang: "ja" },
+            { main: "Broken hearts still beat with love", translation: "破碎的心依然为爱跳动", lang: "en" }
+        ];
+
+        let currentMusic = null;
+        let isPlaying = false;
+        let usedFloatingQuotes = [];
+        let hasInteracted = false; // 标记用户是否已经交互过
+
+        // Initialize
+        window.addEventListener('load', function() {
+            // 预加载音频
+            preloadAudio();
+            
+            // 更新时间和创建相册
+            updateTime();
+            setInterval(updateTime, 1000);
+            createAlbum();
+            
+            // 3秒后隐藏加载屏幕
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    // 开始静音播放
+                    startMutedPlayback();
+                    createHeartParticles();
+                    startFloatingQuotes();
+                }, 1000);
+            }, 3000);
+        });
+
+        // 预加载音频
+        function preloadAudio() {
+            currentMusic = document.getElementById('backgroundMusic');
+            currentMusic.preload = 'auto';
+            currentMusic.muted = true; // 初始设置为静音
+            currentMusic.volume = 0; // 音量为0
+        }
+
+        // 开始静音播放
+        function startMutedPlayback() {
+            if (currentMusic) {
+                currentMusic.play().then(() => {
+                    isPlaying = true;
+                    // 保持静音状态
+                    currentMusic.muted = true;
+                    hideMusicWaves(); // 静音时不显示音波
+                }).catch(e => {
+                    console.log('Muted playback prevented:', e);
+                });
+            }
+        }
+
+        // 用户交互处理函数
+        function handleUserInteraction() {
+            if (hasInteracted) return; // 如果已经交互过，不再处理
+            
+            hasInteracted = true;
+            
+            // 取消静音，重置播放位置，并显示音波
+            if (currentMusic) {
+                currentMusic.muted = false;
+                currentMusic.volume = 1;
+                currentMusic.currentTime = 0; // 从头开始播放
+                showMusicWaves();
+            }
+            
+            // 移除事件监听器，防止重复触发
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+        }
+
+        // 添加用户交互事件监听
+        document.addEventListener('click', handleUserInteraction);
+        document.addEventListener('touchstart', handleUserInteraction);
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('timeDisplay').textContent = timeString;
+        }
+
+        function createAlbum() {
+            const container = document.querySelector('.album-container');
+            
+            images.forEach((imageUrl, index) => {
+                const section = document.createElement('div');
+                section.className = 'photo-section';
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'photo-wrapper';
+                
+                const quoteDiv = document.createElement('div');
+                quoteDiv.className = 'quote-text';
+                
+                const mainQuote = document.createElement('div');
+                mainQuote.className = 'quote-main';
+                mainQuote.textContent = imageQuotes[index].main;
+                
+                const translation = document.createElement('div');
+                translation.className = 'quote-translation';
+                translation.textContent = imageQuotes[index].translation;
+                
+                quoteDiv.appendChild(mainQuote);
+                quoteDiv.appendChild(translation);
+                
+                const img = document.createElement('img');
+                img.src = imageUrl;
+                img.alt = `Photo ${index + 1}`;
+                img.className = 'photo-item';
+                
+                wrapper.appendChild(quoteDiv);
+                wrapper.appendChild(img);
+                section.appendChild(wrapper);
+                container.appendChild(section);
+            });
+        }
+
+        function toggleMusic() {
+            if (!currentMusic) {
+                currentMusic = document.getElementById('backgroundMusic');
+            }
+            
+            if (isPlaying) {
+                currentMusic.pause();
+                isPlaying = false;
+                hideMusicWaves();
+            } else {
+                currentMusic.play().then(() => {
+                    isPlaying = true;
+                    showMusicWaves();
+                }).catch(e => console.log('Play failed:', e));
+            }
+        }
+
+        function showMusicWaves() {
+            ['wave1', 'wave2', 'wave3'].forEach(id => {
+                document.getElementById(id).style.display = 'block';
+            });
+        }
+
+        function hideMusicWaves() {
+            ['wave1', 'wave2', 'wave3'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+        }
+
+        function createHeartParticles() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle';
+                heart.textContent = Math.random() > 0.5 ? '💖' : '💕';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 8000);
+            }, 2000);
+        }
+
+        function startFloatingQuotes() {
+            setInterval(() => {
+                if (usedFloatingQuotes.length >= floatingQuotes.length) {
+                    usedFloatingQuotes = [];
+                }
+                
+                const availableQuotes = floatingQuotes.filter((_, index) => !usedFloatingQuotes.includes(index));
+                const randomIndex = Math.floor(Math.random() * availableQuotes.length);
+                const quote = availableQuotes[randomIndex];
+                const originalIndex = floatingQuotes.indexOf(quote);
+                
+                usedFloatingQuotes.push(originalIndex);
+                
+                const quoteElement = document.createElement('div');
+                quoteElement.className = 'floating-quote';
+                quoteElement.innerHTML = `
+                    <div style="font-size: 20px; margin-bottom: 5px; font-family: ${quote.lang === 'ja' ? 'Noto Sans JP' : quote.lang === 'ko' ? 'Noto Sans KR' : 'Dancing Script'}, cursive;">${quote.main}</div>
+                    <div style="font-size: 12px; opacity: 0.7;">${quote.translation}</div>
+                `;
+                
+                quoteElement.style.left = Math.random() * 80 + 10 + '%';
+                quoteElement.style.top = Math.random() * 80 + 10 + '%';
+                
+                document.body.appendChild(quoteElement);
+                
+                setTimeout(() => {
+                    quoteElement.remove();
+                }, 4000);
+            }, 4000);
+        }
+
+        function openTreasureModal() {
+            document.getElementById('treasureModal').style.display = 'flex';
+        }
+
+        function closeTreasureModal() {
+            document.getElementById('treasureModal').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === '0809') {
+                closeTreasureModal();
+                openVideoModal();
+            } else {
+                alert('密码错误，请重试！');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function openVideoModal() {
+            if (isPlaying) {
+                currentMusic.pause();
+            }
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function closeVideoModal() {
+            document.getElementById('videoModal').style.display = 'none';
+            const video = document.getElementById('treasureVideo');
+            video.pause();
+            video.currentTime = 0;
+            if (isPlaying) {
+                currentMusic.play();
+            }
+        }
+
+        // Keyboard events
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeTreasureModal();
+                closeVideoModal();
+            }
+        });
+    </script>
+</body>
+</html>
