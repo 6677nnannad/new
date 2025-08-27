@@ -219,6 +219,20 @@
             }
         }
 
+        /* Audio Loading Indicator */
+        .audio-loading {
+            position: fixed;
+            bottom: 90px;
+            left: 35px;
+            color: white;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 4px 8px;
+            border-radius: 10px;
+            z-index: 1000;
+            display: none;
+        }
+
         /* Album Container */
         .album-container {
             min-height: 100vh;
@@ -413,6 +427,11 @@
             .floating-quote {
                 font-size: 14px;
             }
+            
+            .audio-loading {
+                bottom: 80px;
+                left: 25px;
+            }
         }
     </style>
 </head>
@@ -435,6 +454,9 @@
 
     <!-- Profile Image -->
     <img src="https://pic.itxiaohui.top/20250827/b00b951e795e57ff62378a1f13310d77.png" alt="Profile" class="profile-image">
+
+    <!-- Audio Loading Indicator -->
+    <div class="audio-loading" id="audioLoading">加载音频中...</div>
 
     <!-- Music Player -->
     <div class="music-player" id="musicPlayer" onclick="toggleMusic()">
@@ -471,7 +493,7 @@
         </div>
     </div>
 
-    <audio id="backgroundMusic" loop>
+    <audio id="backgroundMusic" preload="auto" loop>
         <source src="https://raw.githubusercontent.com/6677nnannad/my-wenb-music/refs/heads/main/haru%20haru.mp3" type="audio/mpeg">
     </audio>
 
@@ -533,23 +555,73 @@
         let currentMusic = null;
         let isPlaying = false;
         let usedFloatingQuotes = [];
+        let audioLoaded = false;
 
         // Initialize
         window.addEventListener('load', function() {
-            setTimeout(() => {
-                document.getElementById('loadingScreen').style.opacity = '0';
+            // 先预加载音频
+            preloadAudio().then(() => {
+                // 音频加载完成后，继续其他初始化
                 setTimeout(() => {
-                    document.getElementById('loadingScreen').style.display = 'none';
-                    startAutoPlay();
-                    createHeartParticles();
-                    startFloatingQuotes();
+                    document.getElementById('loadingScreen').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        startAutoPlay();
+                        createHeartParticles();
+                        startFloatingQuotes();
+                    }, 1000);
+                }, 1000); // 减少等待时间，因为音频已预加载
+            }).catch(error => {
+                console.error('音频加载失败:', error);
+                // 即使音频加载失败，也继续显示页面
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        createHeartParticles();
+                        startFloatingQuotes();
+                    }, 1000);
                 }, 1000);
-            }, 3000);
+            });
 
             updateTime();
             setInterval(updateTime, 1000);
             createAlbum();
         });
+
+        // 预加载音频函数
+        function preloadAudio() {
+            return new Promise((resolve, reject) => {
+                const audio = document.getElementById('backgroundMusic');
+                const loadingIndicator = document.getElementById('audioLoading');
+                
+                // 显示加载指示器
+                loadingIndicator.style.display = 'block';
+                
+                // 监听音频加载事件
+                audio.addEventListener('canplaythrough', function() {
+                    audioLoaded = true;
+                    loadingIndicator.style.display = 'none';
+                    resolve();
+                });
+                
+                audio.addEventListener('error', function() {
+                    loadingIndicator.style.display = 'none';
+                    reject(new Error('音频加载失败'));
+                });
+                
+                // 开始加载音频
+                audio.load();
+                
+                // 设置超时，防止无限等待
+                setTimeout(() => {
+                    if (!audioLoaded) {
+                        loadingIndicator.style.display = 'none';
+                        reject(new Error('音频加载超时'));
+                    }
+                }, 30000); // 30秒超时
+            });
+        }
 
         function updateTime() {
             const now = new Date();
@@ -601,12 +673,21 @@
         }
 
         function startAutoPlay() {
+            if (!audioLoaded) {
+                console.log('音频尚未加载完成，无法自动播放');
+                return;
+            }
+            
             currentMusic = document.getElementById('backgroundMusic');
             currentMusic.play().then(() => {
                 isPlaying = true;
                 showMusicWaves();
             }).catch(e => {
-                console.log('Auto play prevented:', e);
+                console.log('自动播放被阻止:', e);
+                // 显示提示，让用户知道需要点击播放按钮
+                const musicPlayer = document.getElementById('musicPlayer');
+                musicPlayer.style.boxShadow = '0 0 15px rgba(255, 100, 100, 0.8)';
+                musicPlayer.title = '点击播放音乐';
             });
         }
 
@@ -623,7 +704,11 @@
                 currentMusic.play().then(() => {
                     isPlaying = true;
                     showMusicWaves();
-                }).catch(e => console.log('Play failed:', e));
+                    // 移除提示样式
+                    const musicPlayer = document.getElementById('musicPlayer');
+                    musicPlayer.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+                    musicPlayer.title = '';
+                }).catch(e => console.log('播放失败:', e));
             }
         }
 
@@ -731,5 +816,4 @@
         });
     </script>
 </body>
-
 </html>
