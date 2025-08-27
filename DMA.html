@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WenYan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Cinzel:wght@400;500&family=Poppins:wght@300;400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        /* 背景设置 */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://s21.ax1x.com/2025/08/26/pVyoUud.jpg') center/cover no-repeat;
+            z-index: -2;
+        }
+        
+        .background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        
+        /* 心形特效背景 */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 182, 193, 0.6);
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            50% { transform: translateY(-10vh) rotate(180deg); }
+        }
+        
+        /* 加载动画 */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 1s ease-out;
+        }
+        
+        .loading-heart {
+            font-size: 80px;
+            color: #ff6b9d;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* 主容器 */
+        .main-container {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 顶部红心 */
+        .top-heart {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            color: #ff6b9d;
+            z-index: 100;
+            animation: heartbeat 2s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.1); }
+        }
+        
+        /* 时间显示 */
+        .time-display {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            font-family: 'Cinzel', serif;
+            font-size: 14px;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        
+        /* 时间下方图片 */
+        .time-image {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+        
+        .time-image:hover {
+            transform: scale(1.1);
+        }
+        
+        .time-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 宝藏按钮 */
+        .treasure-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Dancing Script', cursive;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(196, 69, 105, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .treasure-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 69, 105, 0.6);
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-content h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 24px;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .confirm-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .close-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        /* 相册容器 */
+        .album-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 文案容器 */
+        .quote-container {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 50;
+            width: 80%;
+            max-width: 600px;
+        }
+        
+        .quote-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(18px, 3vw, 28px);
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .quote-translation {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(12px, 2vw, 16px);
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease 0.3s;
+        }
+        
+        .quote-text.show, .quote-translation.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 相册主体 */
+        .album {
+            position: relative;
+            width: clamp(300px, 60vw, 500px);
+            height: clamp(400px, 70vh, 600px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .album-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.8s ease;
+            filter: blur(0px);
+        }
+        
+        .album-image.changing {
+            filter: blur(10px);
+            transform: scale(1.1);
+        }
+        
+        /* 控制按钮 */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .nav-button.left {
+            left: -80px;
+        }
+        
+        .nav-button.right {
+            right: -80px;
+        }
+        
+        /* 底部文案和音乐控制 */
+        .bottom-left {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .bottom-quote {
+            font-family: 'Dancing Script', cursive;
+            font-size: 16px;
+            color: #add8e6;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .music-control {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .music-control:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .music-control:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* 随机浪漫文案 */
+        .random-quote {
+            position: fixed;
+            font-family: 'Cinzel', serif;
+            color: rgba(255, 255, 255, 0.8);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            font-size: clamp(14px, 2vw, 18px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease;
+            z-index: 20;
+            max-width: 250px;
+            line-height: 1.4;
+        }
+        
+        .random-quote.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-button {
+                display: none;
+            }
+            
+            .album {
+                touch-action: pan-x;
+            }
+            
+            .time-display {
+                font-size: 12px;
+            }
+            
+            .time-image {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .quote-container {
+                top: 10%;
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .album {
+                width: 90vw;
+                height: 60vh;
+            }
+            
+            .treasure-btn {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景 -->
+    <div class="background"></div>
+    
+    <!-- 心形特效容器 -->
+    <div class="hearts-container" id="heartsContainer"></div>
+    
+    <!-- 加载屏幕 -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-heart">💖</div>
+    </div>
+    
+    <!-- 主要内容 -->
+    <div class="main-container" id="mainContainer">
+        <!-- 顶部红心 -->
+        <div class="top-heart">❤️</div>
+        
+        <!-- 时间显示 -->
+        <div class="time-display" id="timeDisplay"></div>
+        
+        <!-- 时间下方图片 -->
+        <div class="time-image">
+            <img src="https://pic.itxiaohui.top/20250827/b00b951e795e57ff62378a1f13310d77.png" alt="装饰图片">
+        </div>
+        
+        <!-- 宝藏按钮 -->
+        <button class="treasure-btn" onclick="openTreasureModal()">宝藏</button>
+        
+        <!-- 相册容器 -->
+        <div class="album-container">
+            <!-- 文案容器 -->
+            <div class="quote-container">
+                <div class="quote-text" id="quoteText"></div>
+                <div class="quote-translation" id="quoteTranslation"></div>
+            </div>
+            
+            <!-- 左侧控制按钮 -->
+            <button class="nav-button left" onclick="previousImage()">‹</button>
+            
+            <!-- 相册主体 -->
+            <div class="album">
+                <img class="album-image" id="albumImage" src="https://s21.ax1x.com/2025/08/26/pVyoG9O.jpg" alt="相册图片">
+            </div>
+            
+            <!-- 右侧控制按钮 -->
+            <button class="nav-button right" onclick="nextImage()">›</button>
+        </div>
+        
+        <!-- 底部左侧 -->
+        <div class="bottom-left">
+            <div class="bottom-quote">心比长相好，懂比爱重要</div>
+            <button class="music-control" id="musicControl" onclick="toggleMusic()">🎵</button>
+        </div>
+        
+        <!-- 随机浪漫文案 -->
+        <div class="random-quote" id="randomQuote"></div>
+    </div>
+    
+    <!-- 宝藏弹窗 -->
+    <div class="modal" id="treasureModal">
+        <div class="modal-content">
+            <h3>答对密码有惊喜 ✨</h3>
+            <input type="password" id="passwordInput" placeholder="请输入密码">
+            <div class="modal-buttons">
+                <button class="modal-btn confirm-btn" onclick="checkPassword()">确认</button>
+                <button class="modal-btn close-btn" onclick="closeTreasureModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 音乐 -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://raw.githubusercontent.com/6677nnannad/my-wenb-music/refs/heads/main/haru%20haru.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 图片数组
+        const images = [
+            'https://s21.ax1x.com/2025/08/26/pVyoG9O.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoT8U.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyo72F.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoHv4.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoqKJ.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoLr9.jpg',
+            'https://s21.ax1x.com/2025/08/26/pVyoObR.jpg',
+            'https://pic.itxiaohui.top/20250826/7d87ea90f93391070a74c60562e37d24.jpg',
+            'https://pic.itxiaohui.top/20250826/75ab2fbb9b0c32d304a2048d755313f0.jpg',
+            'https://pic.itxiaohui.top/20250826/1ac4f123d972adbc6397892176d7f955.jpg',
+            'https://pic.itxiaohui.top/20250826/cd61b4b4712ef9afb3ae71965b3e7cb0.jpg',
+            'https://pic.itxiaohui.top/20250826/b5cee1a7f10b1503dc5b7ec7c158fa2c.jpg',
+            'https://pic.itxiaohui.top/20250826/b8940c81fe3d6b2500926609e98d4a70.jpg',
+            'https://pic.itxiaohui.top/20250826/b049ffdfe00f7cf4c5db9bc5e260a194.jpg',
+            'https://pic.itxiaohui.top/20250826/bd37208fdad5f3e800eed2017e767a78.jpg',
+            'https://pic.itxiaohui.top/20250826/dd289be3bff468a132d153e4732f8a06.jpg'
+        ];
+        
+        // 文案数组
+        const quotes = [
+            {text: "The heart wants what it wants", translation: "心之所向，无所不能", lang: "en"},
+            {text: "사랑은 언제나 아름다워", translation: "爱情永远美丽", lang: "ko"},
+            {text: "君を愛してる", translation: "我爱你", lang: "jp"},
+            {text: "In the depth of silence, love speaks", translation: "在寂静深处，爱在诉说", lang: "en"},
+            {text: "마음이 아파도 사랑해", translation: "即使心痛也要爱", lang: "ko"},
+            {text: "恋は盲目", translation: "爱情是盲目的", lang: "jp"},
+            {text: "Love is the poetry of the senses", translation: "爱情是感官的诗歌", lang: "en"},
+            {text: "그리움이 사랑보다 깊어", translation: "思念比爱情更深", lang: "ko"},
+            {text: "切ない想い", translation: "痛苦的思念", lang: "jp"},
+            {text: "Sometimes the heart sees what is invisible to the eye", translation: "有时心能看见眼睛看不见的东西", lang: "en"},
+            {text: "사랑은 상처도 아름답게 만들어", translation: "爱让伤痛也变得美丽", lang: "ko"},
+            {text: "愛は時を超える", translation: "爱能跨越时间", lang: "jp"}
+        ];
+        
+        // 随机浪漫文案
+        const randomQuotes = [
+            "Love is not about possession, it's about appreciation",
+            "사랑은 소유가 아니라 감사하는 것",
+            "愛とは所有することではなく、感謝すること",
+            "Every sunset brings the promise of a new dawn",
+            "모든 일몰은 새로운 새벽의 약속을 가져온다",
+            "すべての夕日は新しい夜明けの約束をもたらす",
+            "In your smile, I found my home",
+            "당신의 미소에서 나는 나의 집을 찾았다",
+            "君の笑顔に僕の家を見つけた",
+            "Distance means nothing when someone means everything",
+            "거리는 누군가가 모든 것을 의미할 때 아무것도 아니다",
+            "距離は誰かがすべてを意味するとき何も意味しない"
+        ];
+        
+        let currentImageIndex = 0;
+        let currentQuoteIndex = 0;
+        let usedQuotes = new Set();
+        let usedRandomQuotes = new Set();
+        let isPlaying = false;
+        let autoSlideTimer;
+        let quoteTimer;
+        let randomQuoteTimer;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        // 初始化
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').style.opacity = '0';
+                setTimeout(function() {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('mainContainer').style.opacity = '1';
+                    startMusic();
+                    startAutoSlide();
+                    startQuoteRotation();
+                    startRandomQuotes();
+                }, 1000);
+            }, 3000);
+            
+            createHearts();
+            updateTime();
+            setInterval(updateTime, 1000);
+            setupTouchEvents();
+        });
+        
+        // 创建心形特效
+        function createHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartSymbols = ['♡', '♥', '💕', '💖', '💗', '💝'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+                
+                container.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }, 800);
+        }
+        
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                timeZone: 'Asia/Shanghai',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
+            document.getElementById('timeDisplay').textContent = timeString;
+        }
+        
+        // 开始音乐播放
+        function startMusic() {
+            const music = document.getElementById('backgroundMusic');
+            music.play().then(() => {
+                isPlaying = true;
+            }).catch(e => {
+                console.log('音乐自动播放失败，需要用户交互');
+            });
+        }
+        
+        // 切换音乐
+        function toggleMusic() {
+            const music = document.getElementById('backgroundMusic');
+            const control = document.getElementById('musicControl');
+            
+            if (isPlaying) {
+                music.pause();
+                isPlaying = false;
+            } else {
+                music.play();
+                isPlaying = true;
+            }
+            
+            // 点击反馈特效
+            control.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.8)';
+            setTimeout(() => {
+                control.style.boxShadow = '';
+            }, 300);
+        }
+        
+        // 切换图片
+        function changeImage(direction = 1) {
+            const albumImage = document.getElementById('albumImage');
+            
+            albumImage.classList.add('changing');
+            
+            setTimeout(() => {
+                currentImageIndex = (currentImageIndex + direction + images.length) % images.length;
+                albumImage.src = images[currentImageIndex];
+                
+                setTimeout(() => {
+                    albumImage.classList.remove('changing');
+                }, 100);
+            }, 400);
+            
+            updateQuote();
+        }
+        
+        function nextImage() {
+            changeImage(1);
+        }
+        
+        function previousImage() {
+            changeImage(-1);
+        }
+        
+        // 自动切换
+        function startAutoSlide() {
+            autoSlideTimer = setInterval(nextImage, 4000);
+        }
+        
+        // 更新文案
+        function updateQuote() {
+            const quoteText = document.getElementById('quoteText');
+            const quoteTranslation = document.getElementById('quoteTranslation');
+            
+            quoteText.classList.remove('show');
+            quoteTranslation.classList.remove('show');
+            
+            setTimeout(() => {
+                // 选择未使用的文案
+                let availableQuotes = quotes.filter((_, index) => !usedQuotes.has(index));
+                if (availableQuotes.length === 0) {
+                    usedQuotes.clear();
+                    availableQuotes = quotes;
+                }
+                
+                const randomQuote = availableQuotes[Math.floor(Math.random() * availableQuotes.length)];
+                const quoteIndex = quotes.indexOf(randomQuote);
+                usedQuotes.add(quoteIndex);
+                
+                quoteText.textContent = randomQuote.text;
+                quoteTranslation.textContent = randomQuote.translation;
+                
+                setTimeout(() => {
+                    quoteText.classList.add('show');
+                    quoteTranslation.classList.add('show');
+                }, 100);
+            }, 500);
+        }
+        
+        // 开始文案轮换
+        function startQuoteRotation() {
+            updateQuote();
+            quoteTimer = setInterval(updateQuote, 4000);
+        }
+        
+        // 随机浪漫文案
+        function showRandomQuote() {
+            const randomQuoteEl = document.getElementById('randomQuote');
+            
+            // 隐藏当前文案
+            randomQuoteEl.classList.remove('show');
+            
+            setTimeout(() => {
+                // 选择未使用的随机文案
+                let availableQuotes = randomQuotes.filter((_, index) => !usedRandomQuotes.has(index));
+                if (availableQuotes.length === 0) {
+                    usedRandomQuotes.clear();
+                    availableQuotes = randomQuotes;
+                }
+                
+                const quote = availableQuotes[Math.floor(Math.random() * availableQuotes.length)];
+                const quoteIndex = randomQuotes.indexOf(quote);
+                usedRandomQuotes.add(quoteIndex);
+                
+                randomQuoteEl.textContent = quote;
+                
+                // 随机位置
+                const positions = [
+                    { top: '25%', left: '85%' },
+                    { top: '75%', right: '10%' },
+                    { top: '40%', left: '10%' },
+                    { top: '60%', right: '85%' },
+                    { top: '30%', right: '25%' },
+                    { top: '70%', left: '25%' }
+                ];
+                
+                const position = positions[Math.floor(Math.random() * positions.length)];
+                
+                // 重置所有位置样式
+                randomQuoteEl.style.top = '';
+                randomQuoteEl.style.left = '';
+                randomQuoteEl.style.right = '';
+                randomQuoteEl.style.bottom = '';
+                
+                // 应用新位置
+                Object.keys(position).forEach(key => {
+                    randomQuoteEl.style[key] = position[key];
+                });
+                
+                setTimeout(() => {
+                    randomQuoteEl.classList.add('show');
+                    
+                    // 4秒后隐藏
+                    setTimeout(() => {
+                        randomQuoteEl.classList.remove('show');
+                    }, 4000);
+                }, 100);
+            }, 1000);
+        }
+        
+        // 开始随机文案
+        function startRandomQuotes() {
+            setTimeout(showRandomQuote, 2000);
+            randomQuoteTimer = setInterval(showRandomQuote, 8000);
+        }
+        
+        // 触摸事件
+        function setupTouchEvents() {
+            const album = document.querySelector('.album');
+            
+            album.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            
+            album.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+        }
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextImage();
+                } else {
+                    previousImage();
+                }
+            }
+        }
+        
+        // 宝藏弹窗
+        function openTreasureModal() {
+            document.getElementById('treasureModal').style.display = 'flex';
+            document.getElementById('passwordInput').focus();
+        }
+        
+        function closeTreasureModal() {
+            document.getElementById('treasureModal').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+        }
+        
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === '0809') {
+                closeTreasureModal();
+                openTreasureVideo();
+            } else {
+                alert('密码错误，请重试！');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+        
+        function openTreasureVideo() {
+            // 创建视频弹窗
+            const videoModal = document.createElement('div');
+            videoModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 300;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            `;
+            
+            const video = document.createElement('video');
+            video.src = 'https://raw.githubusercontent.com/6677nnannad/my-wenb-music/refs/heads/main/%E4%BD%A0%E8%A2%AB%E9%AA%97%E4%BA%86%20%E5%8E%9F%E7%89%88%E9%AB%98%E6%B8%85%E6%97%A0%E6%B0%B4%E5%8D%B0.mp4';
+            video.controls = true;
+            video.style.cssText = `
+                max-width: 90%;
+                max-height: 80%;
+                border-radius: 10px;
+            `;
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '关闭';
+            closeBtn.style.cssText = `
+                margin-top: 20px;
+                padding: 10px 30px;
+                background: #ff6b9d;
+                color: white;
+                border: none;
+                border-radius: 25px;
+                font-size: 16px;
+                cursor: pointer;
+                font-family: 'Poppins', sans-serif;
+            `;
+            
+            closeBtn.onclick = () => {
+                document.body.removeChild(videoModal);
+            };
+            
+            videoModal.appendChild(video);
+            videoModal.appendChild(closeBtn);
+            document.body.appendChild(videoModal);
+            
+            video.play().catch(e => console.log('视频播放失败'));
+        }
+        
+        // 键盘事件
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextImage();
+            } else if (e.key === 'ArrowLeft') {
+                previousImage();
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                toggleMusic();
+            }
+        });
+        
+        // 密码输入框回车事件
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+        
+        // 防止页面刷新时音乐中断
+        window.addEventListener('beforeunload', () => {
+            clearInterval(autoSlideTimer);
+            clearInterval(quoteTimer);
+            clearInterval(randomQuoteTimer);
+        });
+        
+        // 页面可见性变化时的处理
+        document.addEventListener('visibilitychange', () => {
+            const music = document.getElementById('backgroundMusic');
+            if (document.hidden) {
+                if (isPlaying) {
+                    music.pause();
+                }
+            } else {
+                if (isPlaying) {
+                    music.play().catch(e => console.log('音乐恢复播放失败'));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
