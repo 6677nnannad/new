@@ -21,6 +21,14 @@
             background: #000;
         }
 
+        /* 添加禁止滚动的样式 */
+        body.no-scroll {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
         /* Loading Screen */
         .loading-screen {
             position: fixed;
@@ -102,7 +110,7 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 20px;
+            padding: 15px 20px;
             z-index: 1000;
             display: flex;
             justify-content: space-between;
@@ -111,35 +119,34 @@
 
         .time-display {
             color: #fff;
-            font-size: 18px;
+            font-size: 16px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             font-weight: 500;
         }
 
         .heart-icon {
             position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 30px;
+            top: 15px;
+            right: 70px; /* 调整心形位置到宝藏按钮左边 */
+            font-size: 24px;
             color: #ff6b6b;
             text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.1); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .treasure-btn {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 6px 12px;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
@@ -151,26 +158,32 @@
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
         }
 
-        /* Profile Image */
+        /* Profile Image - 调整位置，更靠近时间 */
         .profile-image {
             position: fixed;
-            top: 80px;
+            top: 55px; /* 更靠近时间显示 */
             left: 20px;
-            width: 80px;
-            height: 80px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             z-index: 100;
+            transition: all 0.3s ease;
         }
 
-        /* Music Player */
+        .profile-image:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Music Player - 缩小尺寸 */
         .music-player {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            width: 60px;
-            height: 60px;
+            bottom: 15px;
+            left: 15px;
+            width: 45px;
+            height: 45px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             display: flex;
@@ -178,17 +191,17 @@
             justify-content: center;
             cursor: pointer;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
         }
 
         .music-player:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .music-icon {
-            font-size: 24px;
+            font-size: 18px;
             color: #333;
         }
 
@@ -223,7 +236,7 @@
         /* Album Container */
         .album-container {
             min-height: 100vh;
-            padding-top: 100px;
+            padding-top: 90px;
         }
 
         .photo-section {
@@ -233,7 +246,7 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            padding: 50px 20px;
+            padding: 40px 15px;
         }
 
         .photo-wrapper {
@@ -245,20 +258,20 @@
 
         .photo-item {
             width: 100%;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
             transition: all 0.5s ease;
             cursor: pointer;
         }
 
         .photo-item:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
         }
 
         .quote-text {
             position: absolute;
-            top: -80px;
+            top: -70px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
@@ -269,13 +282,13 @@
         }
 
         .quote-main {
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 20px;
+            margin-bottom: 6px;
             font-family: 'Great Vibes', cursive;
         }
 
         .quote-translation {
-            font-size: 14px;
+            font-size: 12px;
             opacity: 0.8;
             font-family: 'Noto Sans', sans-serif;
         }
@@ -284,7 +297,7 @@
         .floating-quote {
             position: fixed;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 18px;
+            font-size: 16px;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
             pointer-events: none;
             z-index: 5;
@@ -313,22 +326,22 @@
 
         .modal-content {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            border-radius: 20px;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
             color: white;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
             max-width: 90%;
-            width: 400px;
+            width: 350px;
         }
 
         .modal input {
             width: 100%;
-            padding: 12px;
-            margin: 15px 0;
+            padding: 10px;
+            margin: 12px 0;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 14px;
             text-align: center;
         }
 
@@ -336,10 +349,10 @@
             background: #ff6b6b;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             margin: 5px;
             transition: all 0.3s ease;
         }
@@ -349,62 +362,66 @@
             transform: translateY(-2px);
         }
 
-        /* 右下角加号按钮 */
+        /* 右下角加号按钮 - 缩小并改为蓝色 */
         .add-button {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            bottom: 20px;
+            right: 20px;
+            width: 35px; /* 缩小尺寸 */
+            height: 35px; /* 缩小尺寸 */
+            background: transparent; /* 背景改为透明 */
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 1000;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
 
         .add-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 4px 12px rgba(30, 144, 255, 0.6);
         }
 
         .add-icon {
-            color: white;
+            color: #1e90ff; /* 加号改为蓝色 */
             font-size: 24px;
             font-weight: bold;
+            transition: transform 0.3s ease;
         }
 
         /* 加号按钮的选项 */
         .add-options {
             position: fixed;
-            bottom: 90px;
-            right: 30px;
-            background: rgba(255, 255, 255, 0.9);
+            bottom: 65px; /* 调整位置适应新按钮大小 */
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
-            padding: 10px;
+            padding: 8px;
             display: none;
             flex-direction: column;
             z-index: 1000;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
         }
 
         .option-btn {
-            padding: 8px 15px;
-            margin: 5px 0;
+            padding: 8px 12px;
+            margin: 4px 0;
             border: none;
             border-radius: 5px;
             background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             cursor: pointer;
+            font-size: 12px;
             transition: all 0.3s ease;
         }
 
         .option-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         /* 删除模式下的样式 */
@@ -415,21 +432,21 @@
 
         .delete-btn {
             position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 30px;
-            height: 30px;
+            top: -8px;
+            right: -8px;
+            width: 25px;
+            height: 25px;
             background: #ff6b6b;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             display: none;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .delete-mode .delete-btn {
@@ -452,29 +469,29 @@
 
         .upload-content {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            border-radius: 20px;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
             color: white;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
             max-width: 90%;
-            width: 400px;
+            width: 350px;
         }
 
         .upload-content textarea {
             width: 100%;
-            padding: 12px;
-            margin: 15px 0;
+            padding: 10px;
+            margin: 12px 0;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            min-height: 100px;
+            border-radius: 8px;
+            font-size: 14px;
+            min-height: 80px;
             resize: vertical;
         }
 
         .upload-content input[type="file"] {
             width: 100%;
-            margin: 15px 0;
+            margin: 12px 0;
         }
 
         /* 消息弹窗 */
@@ -485,8 +502,8 @@
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.8);
             color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
+            padding: 15px 25px;
+            border-radius: 8px;
             text-align: center;
             z-index: 10004;
             display: none;
@@ -499,12 +516,20 @@
                 padding: 30px 15px;
             }
             
+            .photo-wrapper {
+                max-width: 85%; /* 移动端图片容器更小 */
+            }
+            
+            .photo-item {
+                max-width: 100%; /* 确保图片自适应 */
+            }
+            
             .quote-main {
-                font-size: 20px;
+                font-size: 18px;
             }
             
             .quote-translation {
-                font-size: 12px;
+                font-size: 11px;
             }
             
             .time-display {
@@ -512,9 +537,14 @@
             }
             
             .profile-image {
-                width: 60px;
-                height: 60px;
-                top: 70px;
+                width: 45px;
+                height: 45px;
+                top: 50px; /* 移动端位置调整，更靠近时间 */
+                left: 15px;
+            }
+            
+            .heart-icon {
+                right: 60px; /* 移动端心形位置调整 */
             }
             
             .floating-quote {
@@ -522,15 +552,26 @@
             }
             
             .add-button {
-                bottom: 20px;
-                right: 20px;
-                width: 45px;
-                height: 45px;
+                bottom: 15px;
+                right: 15px;
+                width: 30px; /* 移动端加号更小 */
+                height: 30px; /* 移动端加号更小 */
             }
             
             .add-options {
-                bottom: 75px;
-                right: 20px;
+                bottom: 55px; /* 移动端选项位置调整 */
+                right: 15px;
+            }
+            
+            .music-player {
+                bottom: 12px;
+                left: 12px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .music-icon {
+                font-size: 16px;
             }
         }
     </style>
@@ -610,6 +651,10 @@
     </audio>
 
     <script>
+        // API endpoints
+        const UPLOAD_API = 'https://yam-git-main-life-projects-f0e5205uwreot.vercel.app/api/save-image';
+        const GET_IMAGES_API = 'https://yam-git-main-life-projects-f0e5205uwreot.vercel.app/api/get-images';
+
         // Image URLs
         const images = [
             'https://s21.ax1x.com/2025/08/26/pVyoG9O.jpg',
@@ -637,7 +682,7 @@
             { main: "心の奥底に隠された涙", translation: "隐藏在内心深处的眼泪", lang: "ja" },
             { main: "Melancholy whispers in the wind", translation: "忧郁在风中低语", lang: "en" },
             { main: "그리움이 밤을 수놓는다", translation: "思念装点着夜晚", lang: "ko" },
-            { main: "儚い夢が心を包む", translation: "虚幻的梦境包围着心灵", lang: "ja" },
+            { main: "儚い夢가心を包む", translation: "虚幻的梦境包围着心灵", lang: "ja" },
             { main: "Solitude paints beautiful sorrows", translation: "孤独描绘着美丽的忧伤", lang: "en" },
             { main: "슬픔 속에서 피어나는 아름다움", translation: "在悲伤中绽放的美丽", lang: "ko" },
             { main: "静寂の中に響く心の声", translation: "寂静中回响的内心声音", lang: "ja" },
@@ -667,11 +712,11 @@
         let currentMusic = null;
         let isPlaying = false;
         let usedFloatingQuotes = [];
-        let hasInteracted = false; // 标记用户是否已经交互过
-        let isAudioReady = false; // 标记音频是否已准备好
-        let isPasswordCorrect = false; // 标记密码是否正确
-        let isDeleteMode = false; // 标记是否处于删除模式
-        let userUploads = []; // 存储用户上传的内容
+        let hasInteracted = false;
+        let isAudioReady = false;
+        let isPasswordCorrect = false;
+        let isDeleteMode = false;
+        let userUploads = [];
 
         // Initialize
         window.addEventListener('load', function() {
@@ -727,7 +772,7 @@
 
         // 用户交互处理函数
         function handleUserInteraction() {
-            if (hasInteracted) return; // 如果已经交互过，不再处理
+            if (hasInteracted) return;
             
             hasInteracted = true;
             
@@ -739,11 +784,10 @@
             if (currentMusic && isAudioReady) {
                 currentMusic.play().then(() => {
                     isPlaying = true;
-                    currentMusic.currentTime = 0; // 从头开始播放
+                    currentMusic.currentTime = 0;
                     showMusicWaves();
                 }).catch(e => {
                     console.log('播放失败:', e);
-                    // 如果播放失败，显示提示
                     alert('请点击页面任意位置播放音乐');
                 });
             }
@@ -771,8 +815,8 @@
                 container.appendChild(section);
             });
             
-            // 添加用户上传的内容
-            loadUserUploads();
+            // 从API获取用户上传的内容
+            loadUserUploadsFromAPI();
         }
         
         function createPhotoSection(imageUrl, quoteData, isOriginal = false) {
@@ -825,14 +869,18 @@
             return section;
         }
         
-        function loadUserUploads() {
-            // 从localStorage加载用户上传的内容
-            const savedUploads = localStorage.getItem('userUploads');
-            if (savedUploads) {
-                userUploads = JSON.parse(savedUploads);
+        async function loadUserUploadsFromAPI() {
+            try {
+                const response = await fetch(GET_IMAGES_API);
+                if (!response.ok) {
+                    throw new Error('获取图片失败');
+                }
+                
+                const uploadedImages = await response.json();
+                userUploads = uploadedImages;
                 
                 const container = document.querySelector('.album-container');
-                userUploads.forEach(upload => {
+                uploadedImages.forEach(upload => {
                     const quoteData = {
                         main: upload.text || '',
                         translation: upload.translation || '',
@@ -841,12 +889,32 @@
                     const section = createPhotoSection(upload.imageUrl, quoteData, false);
                     container.appendChild(section);
                 });
+            } catch (error) {
+                console.error('Error loading uploaded images:', error);
+                showMessage('加载上传图片失败');
             }
         }
         
-        function saveUserUploads() {
-            // 保存用户上传的内容到localStorage
-            localStorage.setItem('userUploads', JSON.stringify(userUploads));
+        async function saveUserUploadsToAPI() {
+            try {
+                const response = await fetch(UPLOAD_API, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userUploads)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('保存图片失败');
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving uploaded images:', error);
+                showMessage('保存图片失败');
+                throw error;
+            }
         }
 
         function toggleMusic() {
@@ -864,7 +932,6 @@
                     showMusicWaves();
                 }).catch(e => {
                     console.log('播放失败:', e);
-                    // 如果播放失败，提示用户交互
                     alert('请先点击页面任意位置激活音频播放');
                 });
             }
@@ -913,8 +980,8 @@
                 const quoteElement = document.createElement('div');
                 quoteElement.className = 'floating-quote';
                 quoteElement.innerHTML = `
-                    <div style="font-size: 20px; margin-bottom: 5px; font-family: ${quote.lang === 'ja' ? 'Noto Sans JP' : quote.lang === 'ko' ? 'Noto Sans KR' : 'Dancing Script'}, cursive;">${quote.main}</div>
-                    <div style="font-size: 12px; opacity: 0.7;">${quote.translation}</div>
+                    <div style="font-size: 18px; margin-bottom: 5px; font-family: ${quote.lang === 'ja' ? 'Noto Sans JP' : quote.lang === 'ko' ? 'Noto Sans KR' : 'Dancing Script'}, cursive;">${quote.main}</div>
+                    <div style="font-size: 11px; opacity: 0.7;">${quote.translation}</div>
                 `;
                 
                 quoteElement.style.left = Math.random() * 80 + 10 + '%';
@@ -928,21 +995,33 @@
             }, 4000);
         }
 
+        // 禁止页面滚动
+        function disableScroll() {
+            document.body.classList.add('no-scroll');
+        }
+
+        // 恢复页面滚动
+        function enableScroll() {
+            document.body.classList.remove('no-scroll');
+        }
+
         function openTreasureModal() {
             document.getElementById('treasureModal').style.display = 'flex';
+            disableScroll(); // 禁止滚动
         }
 
         function closeTreasureModal() {
             document.getElementById('treasureModal').style.display = 'none';
             document.getElementById('passwordInput').value = '';
+            enableScroll(); // 恢复滚动
         }
 
         function checkPassword() {
             const password = document.getElementById('passwordInput').value;
-            if (password === '0809') {
+            if (password === '070809') {
                 isPasswordCorrect = true;
                 closeTreasureModal();
-                showMessage('你答对咯！现在可以使用上传与删除了');
+                showMessage('你答对咯~现在右下角可以上传与删除了'); // 修改提示文本
             } else {
                 showMessage('哎呀~你输错了呢');
                 document.getElementById('passwordInput').value = '';
@@ -953,9 +1032,11 @@
             const popup = document.getElementById('messagePopup');
             popup.textContent = message;
             popup.style.display = 'block';
+            disableScroll(); // 禁止滚动
             
             setTimeout(() => {
                 popup.style.display = 'none';
+                enableScroll(); // 恢复滚动
             }, 2000);
         }
 
@@ -967,11 +1048,9 @@
             
             const options = document.getElementById('addOptions');
             if (isDeleteMode) {
-                // 如果处于删除模式，再次点击加号退出删除模式
                 toggleDeleteMode();
                 options.style.display = 'none';
             } else {
-                // 切换选项的显示状态
                 options.style.display = options.style.display === 'flex' ? 'none' : 'flex';
             }
         }
@@ -979,15 +1058,17 @@
         function openUploadModal() {
             document.getElementById('addOptions').style.display = 'none';
             document.getElementById('uploadModal').style.display = 'flex';
+            disableScroll(); // 禁止滚动
         }
         
         function closeUploadModal() {
             document.getElementById('uploadModal').style.display = 'none';
             document.getElementById('textInput').value = '';
             document.getElementById('imageInput').value = '';
+            enableScroll(); // 恢复滚动
         }
         
-        function uploadContent() {
+        async function uploadContent() {
             const text = document.getElementById('textInput').value.trim();
             const imageFile = document.getElementById('imageInput').files[0];
             
@@ -996,20 +1077,18 @@
                 return;
             }
             
-            // 这里应该是上传到GitHub仓库的API调用
-            // 由于没有具体API信息，这里模拟上传过程
-            
-            if (imageFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageUrl = e.target.result;
+            try {
+                let imageUrl = null;
+                
+                if (imageFile) {
+                    // 将图片转换为Base64
+                    imageUrl = await convertImageToBase64(imageFile);
                     
-                    // 检测文本语言并自动翻译（这里简化处理）
+                    // 检测文本语言并自动翻译
                     let translation = '';
                     let lang = 'en';
                     
                     if (text) {
-                        // 简单的语言检测（实际应用中应使用更复杂的检测方法）
                         if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) {
                             lang = 'ja';
                             translation = '【日语文本待翻译】';
@@ -1035,7 +1114,9 @@
                     
                     // 添加到用户上传列表
                     userUploads.push(newUpload);
-                    saveUserUploads();
+                    
+                    // 发送到API
+                    await saveUserUploadsToAPI();
                     
                     // 添加到相册
                     const container = document.querySelector('.album-container');
@@ -1049,57 +1130,66 @@
                     
                     closeUploadModal();
                     showMessage('上传成功！');
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                // 只有文本的情况
-                // 检测文本语言并自动翻译（这里简化处理）
-                let translation = '';
-                let lang = 'en';
-                
-                if (text) {
-                    // 简单的语言检测
-                    if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) {
-                        lang = 'ja';
-                        translation = '【日语文本待翻译】';
-                    } else if (/[\uAC00-\uD7AF]/.test(text)) {
-                        lang = 'ko';
-                        translation = '【韩语文本待翻译】';
-                    } else if (/[a-zA-Z]/.test(text)) {
-                        lang = 'en';
-                        translation = '【英语文本待翻译】';
-                    } else {
-                        lang = 'zh';
-                        translation = text;
+                } else {
+                    // 只有文本的情况
+                    let translation = '';
+                    let lang = 'en';
+                    
+                    if (text) {
+                        if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) {
+                            lang = 'ja';
+                            translation = '【日语文本待翻译】';
+                        } else if (/[\uAC00-\uD7AF]/.test(text)) {
+                            lang = 'ko';
+                            translation = '【韩语文本待翻译】';
+                        } else if (/[a-zA-Z]/.test(text)) {
+                            lang = 'en';
+                            translation = '【英语文本待翻译】';
+                        } else {
+                            lang = 'zh';
+                            translation = text;
+                        }
                     }
+                    
+                    // 创建新的上传内容（只有文本）
+                    const newUpload = {
+                        text: text,
+                        translation: translation,
+                        lang: lang,
+                        imageUrl: null
+                    };
+                    
+                    // 添加到用户上传列表
+                    userUploads.push(newUpload);
+                    await saveUserUploadsToAPI();
+                    
+                    // 添加到相册（只有文本，使用默认背景图）
+                    const container = document.querySelector('.album-container');
+                    const quoteData = {
+                        main: text,
+                        translation: translation,
+                        lang: lang
+                    };
+                    const defaultImage = 'https://s21.ax1x.com/2025/08/26/pVyoUud.jpg';
+                    const section = createPhotoSection(defaultImage, quoteData, false);
+                    container.appendChild(section);
+                    
+                    closeUploadModal();
+                    showMessage('上传成功！');
                 }
-                
-                // 创建新的上传内容（只有文本）
-                const newUpload = {
-                    text: text,
-                    translation: translation,
-                    lang: lang,
-                    imageUrl: null
-                };
-                
-                // 添加到用户上传列表
-                userUploads.push(newUpload);
-                saveUserUploads();
-                
-                // 添加到相册（只有文本，使用默认背景图）
-                const container = document.querySelector('.album-container');
-                const quoteData = {
-                    main: text,
-                    translation: translation,
-                    lang: lang
-                };
-                const defaultImage = 'https://s21.ax1x.com/2025/08/26/pVyoUud.jpg'; // 使用背景图
-                const section = createPhotoSection(defaultImage, quoteData, false);
-                container.appendChild(section);
-                
-                closeUploadModal();
-                showMessage('上传成功！');
+            } catch (error) {
+                console.error('上传失败:', error);
+                showMessage('上传失败，请重试');
             }
+        }
+        
+        function convertImageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
         }
         
         function toggleDeleteMode() {
@@ -1115,15 +1205,20 @@
             }
         }
         
-        function deleteUploadedContent(section) {
+        async function deleteUploadedContent(section) {
             const container = document.querySelector('.album-container');
             const index = Array.from(container.children).indexOf(section) - images.length;
             
             if (index >= 0 && index < userUploads.length) {
                 userUploads.splice(index, 1);
-                saveUserUploads();
-                container.removeChild(section);
-                showMessage('删除成功！');
+                try {
+                    await saveUserUploadsToAPI();
+                    container.removeChild(section);
+                    showMessage('删除成功！');
+                } catch (error) {
+                    console.error('删除失败:', error);
+                    showMessage('删除失败，请重试');
+                }
             }
         }
 
@@ -1131,6 +1226,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeTreasureModal();
+                closeUploadModal();
                 if (isDeleteMode) {
                     toggleDeleteMode();
                 }
