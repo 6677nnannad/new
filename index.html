@@ -21,6 +21,13 @@
             background: #000;
         }
 
+        /* 防止弹窗时页面滚动 */
+        body.modal-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+
         /* Loading Screen */
         .loading-screen {
             position: fixed;
@@ -119,7 +126,7 @@
         .heart-icon {
             position: absolute;
             top: 15px;
-            left: 120px; /* 调整心形位置，靠近时间左边 */
+            left: 120px; /* è°ƒæ•´å¿ƒå½¢ä½ç½®ï¼Œé è¿'æ—¶é—´å·¦è¾¹ */
             font-size: 24px;
             color: #ff6b6b;
             text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
@@ -150,11 +157,11 @@
             box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
         }
 
-        /* Profile Image - 调整位置，更靠近时间 */
+        /* Profile Image - è°ƒæ•´ä½ç½®ï¼Œæ›´é è¿'æ—¶é—´ */
         .profile-image {
             position: fixed;
             top: 60px;
-            left: 20px; /* 调整位置，更靠近时间 */
+            left: 20px; /* è°ƒæ•´ä½ç½®ï¼Œæ›´é è¿'æ—¶é—´ */
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -169,7 +176,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
         }
 
-        /* Music Player - 缩小尺寸 */
+        /* Music Player - ç¼©å°å°ºå¯¸ */
         .music-player {
             position: fixed;
             bottom: 15px;
@@ -354,14 +361,14 @@
             transform: translateY(-2px);
         }
 
-        /* 右下角加号按钮 - 缩小并改为蓝色 */
+        /* å³ä¸‹è§'åŠ å·æŒ‰é'® - ç¼©å°å¹¶æ"¹ä¸ºè"è‰² */
         .add-button {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 35px; /* 缩小尺寸 */
-            height: 35px; /* 缩小尺寸 */
-            background: transparent; /* 背景改为透明 */
+            width: 35px; /* ç¼©å°å°ºå¯¸ */
+            height: 35px; /* ç¼©å°å°ºå¯¸ */
+            background: transparent; /* èƒŒæ™¯æ"¹ä¸ºé€æ˜Ž */
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -378,16 +385,16 @@
         }
 
         .add-icon {
-            color: #1e90ff; /* 加号改为蓝色 */
+            color: #1e90ff; /* åŠ å·æ"¹ä¸ºè"è‰² */
             font-size: 24px;
             font-weight: bold;
             transition: transform 0.3s ease;
         }
 
-        /* 加号按钮的选项 */
+        /* åŠ å·æŒ‰é'®çš„é€‰é¡¹ */
         .add-options {
             position: fixed;
-            bottom: 65px; /* 调整位置适应新按钮大小 */
+            bottom: 65px; /* è°ƒæ•´ä½ç½®é€‚åº"æ–°æŒ‰é'®å¤§å° */
             right: 20px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
@@ -416,7 +423,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
-        /* 删除模式下的样式 */
+        /* åˆ é™¤æ¨¡å¼ä¸‹çš„æ ·å¼ */
         .delete-mode .photo-item:not(.original) {
             filter: blur(2px);
             opacity: 0.8;
@@ -445,7 +452,7 @@
             display: flex;
         }
 
-        /* 上传模态框 */
+        /* ä¸Šä¼ æ¨¡æ€æ¡† */
         .upload-modal {
             position: fixed;
             top: 0;
@@ -486,7 +493,7 @@
             margin: 12px 0;
         }
 
-        /* 消息弹窗 */
+        /* æ¶ˆæ¯å¼¹çª— */
         .message-popup {
             position: fixed;
             top: 50%;
@@ -509,11 +516,11 @@
             }
             
             .photo-wrapper {
-                max-width: 85%; /* 移动端图片容器更小 */
+                max-width: 85%; /* ç§»åŠ¨ç«¯å›¾ç‰‡å®¹å™¨æ›´å° */
             }
             
             .photo-item {
-                max-width: 100%; /* 确保图片自适应 */
+                max-width: 100%; /* ç¡®ä¿å›¾ç‰‡è‡ªé€‚åº" */
             }
             
             .quote-main {
@@ -532,11 +539,11 @@
                 width: 45px;
                 height: 45px;
                 top: 55px;
-                left: 15px; /* 移动端位置调整 */
+                left: 15px; /* ç§»åŠ¨ç«¯ä½ç½®è°ƒæ•´ */
             }
             
             .heart-icon {
-                left: 100px; /* 移动端心形位置调整 */
+                left: 100px; /* ç§»åŠ¨ç«¯å¿ƒå½¢ä½ç½®è°ƒæ•´ */
             }
             
             .floating-quote {
@@ -546,12 +553,12 @@
             .add-button {
                 bottom: 15px;
                 right: 15px;
-                width: 30px; /* 移动端加号更小 */
-                height: 30px; /* 移动端加号更小 */
+                width: 30px; /* ç§»åŠ¨ç«¯åŠ å·æ›´å° */
+                height: 30px; /* ç§»åŠ¨ç«¯åŠ å·æ›´å° */
             }
             
             .add-options {
-                bottom: 55px; /* 移动端选项位置调整 */
+                bottom: 55px; /* ç§»åŠ¨ç«¯é€‰é¡¹ä½ç½®è°ƒæ•´ */
                 right: 15px;
             }
             
@@ -643,9 +650,9 @@
     </audio>
 
     <script>
-        // API endpoints - 更新为新的API地址
-        const UPLOAD_API = 'https://wen-yan13.vercel.app/api/upload';
-        const GET_IMAGES_API = 'https://wen-yan13.vercel.app/api/images';
+        // API endpoints - 更新为新的链接
+        const UPLOAD_API = 'https://mmb55.vercel.app/api/upload';
+        const GET_IMAGES_API = 'https://mmb55.vercel.app/api/content';
 
         // Image URLs
         const images = [
@@ -709,6 +716,7 @@
         let isPasswordCorrect = false;
         let isDeleteMode = false;
         let userUploads = [];
+        let scrollPosition = 0; // 存储页面滚动位置
 
         // Initialize
         window.addEventListener('load', function() {
@@ -987,13 +995,28 @@
             }, 4000);
         }
 
+        // 防止弹窗滚动的辅助函数
+        function preventScroll() {
+            scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            document.body.classList.add('modal-open');
+            document.body.style.top = `-${scrollPosition}px`;
+        }
+
+        function restoreScroll() {
+            document.body.classList.remove('modal-open');
+            document.body.style.top = '';
+            window.scrollTo(0, scrollPosition);
+        }
+
         function openTreasureModal() {
+            preventScroll();
             document.getElementById('treasureModal').style.display = 'flex';
         }
 
         function closeTreasureModal() {
             document.getElementById('treasureModal').style.display = 'none';
             document.getElementById('passwordInput').value = '';
+            restoreScroll();
         }
 
         function checkPassword() {
@@ -1035,6 +1058,7 @@
         
         function openUploadModal() {
             document.getElementById('addOptions').style.display = 'none';
+            preventScroll();
             document.getElementById('uploadModal').style.display = 'flex';
         }
         
@@ -1042,6 +1066,7 @@
             document.getElementById('uploadModal').style.display = 'none';
             document.getElementById('textInput').value = '';
             document.getElementById('imageInput').value = '';
+            restoreScroll();
         }
         
         async function uploadContent() {
